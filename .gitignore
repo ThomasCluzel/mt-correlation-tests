@@ -1,0 +1,10 @@
+# ignore CMake stuff
+CMake*
+Makefile
+!CMakeLists.txt
+
+# ignore binaries
+*.exe
+*.a
+*.lib
+prog*
