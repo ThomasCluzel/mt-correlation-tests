@@ -44,22 +44,72 @@
 */
 
 #include <stdio.h>
-#include "mt19937ar.h"
+#include <math.h>
+#include "../libmt/mt19937ar.h"
+
+#define FILENAME_CORRECT_OUTPUT "mt19937ar.out"
+#define BUF_SIZE 512
+#define EPSILON 0.00000001
 
 int main(void)
 {
-    int i;
-    unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
-    init_by_array(init, length);
-    printf("1000 outputs of genrand_int32()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10lu ", genrand_int32());
-      if (i%5==4) printf("\n");
-    }
-    printf("\n1000 outputs of genrand_real2()\n");
-    for (i=0; i<1000; i++) {
-      printf("%10.8f ", genrand_real2());
-      if (i%5==4) printf("\n");
-    }
-    return 0;
+   char buf[BUF_SIZE] = "";
+   unsigned long random_integer = 0;
+   unsigned long random_integer_correct = 0;
+   double random_floating = 0.0;
+   double random_floating_correct = 0.0;
+   FILE *file_correct_output = NULL;
+
+   int i;
+   unsigned long init[4] = {0x123, 0x234, 0x345, 0x456}, length = 4;
+
+   init_by_array(init, length);
+
+   file_correct_output = fopen(FILENAME_CORRECT_OUTPUT, "r");
+   if(file_correct_output == NULL)
+   {
+      fprintf(stderr, "Error: couldn't open file %s\n", FILENAME_CORRECT_OUTPUT);
+      return 1; // test failed
+   }
+
+   //printf("1000 outputs of genrand_int32()\n");
+   fgets(buf, BUF_SIZE, file_correct_output);
+   for (i = 0; i < 1000; i++)
+   {
+      //printf("%10lu ", genrand_int32());
+      random_integer = genrand_int32();
+      fscanf(file_correct_output, "%ul", &random_integer_correct);
+      if( random_integer != random_integer_correct )
+      {
+         fprintf(stderr, "Error: generated %ul expected %ul\n", random_integer, random_integer_correct);
+         fclose(file_correct_output);
+         return 1; // test failed
+      }
+      /*if (i % 5 == 4)
+         printf("\n");*/
+   }
+
+   fgets(buf, BUF_SIZE, file_correct_output); // end of the line of integers
+   fgets(buf, BUF_SIZE, file_correct_output); // the blank line between integers and reals
+   fgets(buf, BUF_SIZE, file_correct_output); // the line introducing reals
+
+   //printf("\n1000 outputs of genrand_real2()\n");
+   for (i = 0; i < 1000; i++)
+   {
+      //printf("%10.8f ", genrand_real2());
+      random_floating = genrand_real2();
+      fscanf(file_correct_output, "%lf", &random_floating_correct);
+      if( fabs(random_floating-random_floating_correct) > EPSILON )
+      {
+         fprintf(stderr, "Error: generated %10.8f expected %10.8f\n", random_floating, random_floating_correct);
+         fclose(file_correct_output);
+         return 1;
+      }
+      /*if (i % 5 == 4)
+         printf("\n");*/
+   }
+
+   fclose(file_correct_output);
+
+   return 0;
 }

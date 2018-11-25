@@ -8,6 +8,10 @@ project("mt-correlation-tests"
 # Include the library
 add_subdirectory(libmt)
 
+# Add the tests
+add_subdirectory(tests)
+
+# Source files
 file(GLOB SRC *.c)
 
 # add warning flags to the compiler

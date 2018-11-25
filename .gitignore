@@ -1,10 +1,17 @@
 # ignore CMake stuff
 CMake*
+CTest*
 Makefile
 !CMakeLists.txt
+
+# ignore config files
+.vscode
 
 # ignore binaries
 *.exe
 *.a
 *.lib
 prog*
+
+# ignore log files
+*.log
