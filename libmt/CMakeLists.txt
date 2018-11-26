@@ -8,3 +8,6 @@ file(GLOB HEADER *.h)
 
 # Compilation of the library (static) => libmt19937ar
 add_library(mt19937ar ${SRC} ${HEADER})
+# Link the libraries
+target_link_libraries(mt19937ar m)
+target_link_libraries(mt19937ar ntl)
