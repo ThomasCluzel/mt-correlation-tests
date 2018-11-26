@@ -1,6 +1,7 @@
 # ignore CMake stuff
 CMake*
 CTest*
+Testing*
 Makefile
 !CMakeLists.txt
 
