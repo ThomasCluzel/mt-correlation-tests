@@ -74,4 +74,14 @@ double genrand_real3(void);
 /* generates a random number on [0,1) with 53-bit resolution*/
 double genrand_res53(void);
 
+// Our functions
+#define N 624
+typedef struct{
+  unsigned long s[N];
+  int ptr;
+}State;
+void getState(State* s);
+void setState(State* s);
+void jump_ahead(long steps);
+
 #endif // MT19937_H
