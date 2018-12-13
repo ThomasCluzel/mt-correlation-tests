@@ -683,6 +683,8 @@ int main()
 }
 
 /**
+ * To compile this file run (in libmt/):
+ *   g++ -pthread -Ilibs/include -Llibs/lib -o prog mt19937ar.c -lntl -lgmp -lm
  * TODO:
  * - find why it failed
  * - move the main function in a file in the tests folder
