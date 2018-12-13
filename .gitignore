@@ -10,9 +10,12 @@ Makefile
 
 # ignore binaries
 *.exe
-*.a
-*.lib
+libmt/*.a
+libmt/*.lib
 prog*
 
 # ignore log files
 *.log
+
+# ignore scripts
+*.bat

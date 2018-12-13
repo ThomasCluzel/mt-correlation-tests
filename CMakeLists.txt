@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-set(DEBUG "yes")
+set(DEBUG YES)
 
 # Le projet est étiqueté hello
 project("mt-correlation-tests"
@@ -8,8 +8,18 @@ project("mt-correlation-tests"
         LANGUAGES C)
 
 # add warning flags to the compiler
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
-if(${DEBUG} EQUAL "yes")
+if(MSVC)
+  if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+    string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  endif()
+elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+endif()
+
+# Debug or release
+if(${DEBUG})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 endif()
 
