@@ -99,6 +99,9 @@ static State vec_h[LL];
 static unsigned long mt[N]; /* the array for the state vector  */
 static int mti=N+1; /* mti==N+1 means mt[N] is not initialized */
 
+GF2X phi; /* phi is the minimal polynomial */
+GF2X g; /* g(t) is used to store t^J mod phi(t) */
+
 /* initializes mt[N] with a seed */
 void init_genrand(unsigned long s)
 {
@@ -222,9 +225,6 @@ double genrand_res53(void)
  * File minipoly_mt
  */
 
-GF2X phi; /* phi is the minimal polynomial */
-GF2X g; /* g(t) is used to store t^J mod phi(t) */
-
 /* computes the minimal polynomial of the linear recurrence */
 void comp_mini_poly (void)
 {
@@ -337,6 +337,7 @@ State *horner1(unsigned long *pf, State *ss)
   int i=MEXP-1;
   State *temp;
 
+	puts("Horner jump...");
   temp = (State *)calloc(1, sizeof(State));
 
   while(get_coef(pf,i) == 0)
@@ -397,6 +398,8 @@ State *calc_state(unsigned long *pf, State *ss)
 {
   State *temp1;
   int i=MEXP-1, j, digit, skip=0;
+
+	puts("Sliding window jump...");
 
   temp1 = (State *)calloc(1, sizeof(State));
 
@@ -536,155 +539,116 @@ void gen_next(State *ss)
 /**
  * Our functions
  */
-void getState(State* s)
-{
-  memcpy(s->s, mt, N*sizeof(unsigned long));
-  s->ptr = mti;
-}
-void setState(State* s)
-{
-  memcpy(mt, s->s, N*sizeof(unsigned long));
-  mti = s->ptr;
-}
-void jump_ahead(long steps)
-{
-  /*
-  State s0;
-  State* ss2;
-  std::stringstream buf;
-  std::string buf2;
-  //char c;
-  int i, j;
-  unsigned long pf[P_SIZE];
-  //pf = (unsigned long *)calloc(P_SIZE, sizeof(unsigned long));
-  for(i=0 ; i<P_SIZE ; i++)
-    pf[i] = 0;
 
-  comp_mini_poly();
-  comp_jump_rem(steps);
-
-  for (i=MEXP-1; i>-1; i--)
-    buf << coeff (g, i);
-  buf2 = buf.str();
-  for (i=MEXP-1, j=0; i>-1; i--, j++)
-  {
-    //c = fgetc(fin);
-    //c = buf2[j];
-    std::cout << buf2 << std::endl;
-    if (buf2[j] == '1')
-      set_coef(pf, i, 1);
-  }
-
-  getState(&s0);
-  gen_vec_h(&s0);
-  ss2 = calc_state(pf, &s0);
-  setState(ss2);
-  free(ss2);
-  */
-  int i, a=0;
-  long jump_step = steps; /* the number of steps of jumping ahead */
-  //unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
-  ofstream fout;
-
-  //init_by_array(init, length);
-
-  comp_mini_poly ();
-  comp_jump_rem (jump_step);
-
-  fout.open ("clist_mt19937.txt", ios::out);
-  if (!fout)
-    exit(-1);
-
-  for (i=MEXP-1; i>-1; i--)
-    fout << coeff (g, i);
-
-  fout.close();
-
-  // then read the file
-
-  unsigned long *pf;
-  State *ss1, *ss2, ss3;
-  State s0;
-  int j, deg;
-  char c;
-  FILE *fin;
-
-  pf = (unsigned long *)calloc(P_SIZE, sizeof(unsigned long));
-
-  /* read the file clist.txt, and set the coefficient */
-  if ((fin = fopen("clist_mt19937.txt","r")) == NULL){
-    printf("File read error.\n");
-    exit(1);
-  }
-
-  for (i=MEXP-1; i>-1; i--){
-    c = fgetc(fin);
-    if (c == '1')
-      set_coef(pf, i, 1);
-  }
-  fclose(fin);
-
-  getState(&s0);
-
-  /* computes jumping ahead with standard Horner method */    
-  ss1 = horner1(pf, &s0);
+unsigned long* init(State *s0, int jumpLength){
+	unsigned long *pf;
+	int i, c;
+	
+	puts("Saving initial state...");
+	//Set initial state
+    for(i=0; i<624; i++){
+		s0->s[i] = mt[i];
+	}
     
-  /* computes jumping ahead with Sliding window algorithm */
-  gen_vec_h(&s0);
-  ss2 = calc_state(pf, &s0);
+    puts("Calculate polynomial...");
+	//Calculate polynomial
+    comp_mini_poly();
+	comp_jump_rem (jumpLength);
+	
+    pf = (unsigned long *)calloc(P_SIZE, sizeof(unsigned long));
+    
+    puts("Get coefficients...");
+    //Get polynomial coefficient and give it to pf
+    for (i=MEXP-1; i>-1; i--){
+		c = (int)rep(coeff(g, i));
+		set_coef(pf, i, c);
+    }
+	
+	return pf;
+}
 
-  if (compare_state(ss1, ss2) != 0)
-    printf("error the states are different\n");
+unsigned long* jump_ahead_manually(int jumpLength){
+	int i;
+	
+	puts("Generate random numbers one by one...");
+	
+	for(i=0; i<jumpLength; i++){
+        printf("%lf \n", genrand_real1()) ;
+    }
+    
+    return mt;
+}
 
-  setState(ss2);
+State* jump_ahead_horner(int jumpLength){
+    State *ss, s0;
 
-  free(ss1);
-  free(ss2);
-  free(pf);
+	unsigned long *pf=init(&s0, jumpLength);
+    
+    /*Computes jumping ahead with standard Horner method */ 
+    ss = horner1(pf, &s0);
+	return ss;
+}
 
-  remove("clist_mt19937.txt");
+State* jump_ahead_sliding(int jumpLength){
+	int i, c;
+    State *ss, s0;
+	unsigned long *pf=init(&s0, jumpLength);
+    
+    /*Computes jumping ahead with standard Horner method */ 
+    ss = calc_state(pf, &s0);
+	return ss;
+}
+ 
+ 
+ void jump_ahead_comparison(int jumpLength){
+    
+    int i, j, c;
+	State s0, *ss1, *ss2;
+	unsigned long *pf=init(&s0, jumpLength);
+    
+    /*Computes jumping ahead with standard Horner method */ 
+    ss1 = horner1(pf, &s0);
+    
+    /*Computes jumping ahead with Sliding window algorithm*/
+    gen_vec_h(&s0);
+    ss2 = calc_state(pf, &s0);
+    
+    //Jump manually
+    jump_ahead_manually(jumpLength);
+    
+    puts("Comparaison de l'état:");
+    puts("mot |   MT   | Horner | Sliding window");
+    for(i=0; i<624; i++){
+        printf("%d | %ld | %ld | %ld\n", i, mt[i], ss1->s[i], ss2->s[i]);
+    }
+	
 }
 
 // just a quick test
-int main()
+int main(int argc, char** argv)
 {
-  long i, jump_step = 10; /* the number of steps of jumping ahead */
   unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
-  State si;
-  unsigned long output[10], o, nbGen=10;
-
+  
+  int jumpLength;
+  
   init_by_array(init, length);
-
-  getState(&si); // save the initial state
-  printf("mti=%d\n", mti);
-
-  for(i=0 ; i<jump_step ; i++) // skip x numbers
-    genrand_int32();
-  printf("mti=%d\n", mti);
-
-  for(i=0 ; i<nbGen ; i++)
-    output[i] = genrand_int32();
-
-  setState(&si); // reset the state
-  printf("mti=%d\n", mti);
-
-  jump_ahead(jump_step); //jump x steps
-  printf("mti=%d\n", mti);
-
-  for(i=0 ; i<nbGen ; i++)
-  {
-    o = genrand_int32();
-    if(o != output[i])
-      printf("Error: expected %lu, got %lu\n", output[i], o);
+    
+  if(argc<2){
+      puts("Vous devez saisir le nombre d'itérations en paramètre.");
+      return 1;
   }
-  printf("End \n");
+  
+  jumpLength=strtol(argv[1], NULL, 10);
+  jump_ahead_comparison(jumpLength);
+
+  puts("End");
 
   return 0;
 }
 
 /**
  * To compile this file run (in libmt/):
- *   g++ -pthread -Ilibs/include -Llibs/lib -o prog mt19937ar.c -lntl -lgmp -lm
+ *   g++ -pthread -std=c++11 -Ilibs/include -Llibs/lib -o prog mt19937ar.c -lntl -lgmp -lm
  * TODO:
  * - find why it failed
  * - move the main function in a file in the tests folder
