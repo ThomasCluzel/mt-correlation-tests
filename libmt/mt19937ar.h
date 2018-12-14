@@ -75,13 +75,43 @@ double genrand_real3(void);
 double genrand_res53(void);
 
 // Our functions
+/* This is the size of the status */
 #define N 624
+
+/* This is the structure to store a status of mt */
 typedef struct{
   unsigned long s[N];
   int ptr;
 }State;
+
+/**
+ * \fn void getState(State* s)
+ * \param s the structure in which to store the current status of MT
+ * 
+ * State s;
+ * getState(&s);
+ */
 void getState(State* s);
+
+/**
+ * \fn void setState(State* s)
+ * \param s the structure that contains a state of MT
+ * 
+ * State s;
+ * getState(&s); // save the status
+ * // draw some random numbers
+ * setState(&s); // reset the status to an older one
+ */
 void setState(State* s);
+
+/**
+ * \fn void jump_ahead(long steps)
+ * \param steps the number of numbers to skip in the sequence.
+ *   WARNING: This function does not work yet.
+ * 
+ * Calling jump_ahead(1000000) is like calling genrand_XXXX() 1000000 times.
+ * 
+ */
 void jump_ahead(long steps);
 
 #endif // MT19937_H

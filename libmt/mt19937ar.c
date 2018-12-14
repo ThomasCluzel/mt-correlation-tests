@@ -546,49 +546,20 @@ void setState(State* s)
   memcpy(mt, s->s, N*sizeof(unsigned long));
   mti = s->ptr;
 }
-void jump_ahead(long steps)
+void jump_ahead(long jump_step)
 {
-  /*
-  State s0;
-  State* ss2;
-  std::stringstream buf;
-  std::string buf2;
-  //char c;
-  int i, j;
-  unsigned long pf[P_SIZE];
-  //pf = (unsigned long *)calloc(P_SIZE, sizeof(unsigned long));
-  for(i=0 ; i<P_SIZE ; i++)
-    pf[i] = 0;
-
-  comp_mini_poly();
-  comp_jump_rem(steps);
-
-  for (i=MEXP-1; i>-1; i--)
-    buf << coeff (g, i);
-  buf2 = buf.str();
-  for (i=MEXP-1, j=0; i>-1; i--, j++)
-  {
-    //c = fgetc(fin);
-    //c = buf2[j];
-    std::cout << buf2 << std::endl;
-    if (buf2[j] == '1')
-      set_coef(pf, i, 1);
-  }
-
-  getState(&s0);
-  gen_vec_h(&s0);
-  ss2 = calc_state(pf, &s0);
-  setState(ss2);
-  free(ss2);
-  */
+  // for the minipoly
   int i, a=0;
-  long jump_step = steps; /* the number of steps of jumping ahead */
-  //unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
   ofstream fout;
+  // for the sliding window algorithm
+  unsigned long *pf;
+  State *ss1, *ss2, ss3;
+  State s0;
+  int j, deg;
+  char c;
+  FILE *fin;
 
-  //init_by_array(init, length);
-
-  comp_mini_poly ();
+  comp_mini_poly (); // WARNING: it modifies MT status to compute the polynome
   comp_jump_rem (jump_step);
 
   fout.open ("clist_mt19937.txt", ios::out);
@@ -599,15 +570,6 @@ void jump_ahead(long steps)
     fout << coeff (g, i);
 
   fout.close();
-
-  // then read the file
-
-  unsigned long *pf;
-  State *ss1, *ss2, ss3;
-  State s0;
-  int j, deg;
-  char c;
-  FILE *fin;
 
   pf = (unsigned long *)calloc(P_SIZE, sizeof(unsigned long));
 
@@ -645,12 +607,12 @@ void jump_ahead(long steps)
   remove("clist_mt19937.txt");
 }
 
-// just a quick test
-int main()
+// just a quick test, move it to the test folder
+int main_test()
 {
   long i, jump_step = 10; /* the number of steps of jumping ahead */
   unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
-  State si;
+  State si; // the initial state
   unsigned long output[10], o, nbGen=10;
 
   init_by_array(init, length);
@@ -682,6 +644,36 @@ int main()
   return 0;
 }
 
+// to determinate how step we actually skip
+int main()
+{
+  unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
+  State si; // the initial state
+  unsigned long output[10], nbGen=10;
+  long i, jump_step = 550, numbersGen=0; /* the number of steps of jumping ahead */
+
+  init_by_array(init, length);
+
+  getState(&si); // save the initial state
+
+  // jump ahead
+  jump_ahead(jump_step);
+
+  for(i=0 ; i<nbGen ; i++)
+    output[i] = genrand_int32();
+
+  setState(&si);
+
+  // how many numbers
+  while(output[0] != genrand_int32())
+    numbersGen++;
+  printf("Numbers generated %ld with jump_step = %ld\n%lu\n", numbersGen, jump_step, output[0]);
+  for(i=1 ; i<nbGen ; i++)
+    printf("%lu %lu\n", output[i], genrand_int32());
+
+  return 0;
+}
+
 /**
  * To compile this file run (in libmt/):
  *   g++ -pthread -Ilibs/include -Llibs/lib -o prog mt19937ar.c -lntl -lgmp -lm
@@ -690,4 +682,19 @@ int main()
  * - move the main function in a file in the tests folder
  * - update readme
  * - update CMakeLists.txt
+ * 
+ * Numbers generated 39874 with jump_step = 0
+ * Numbers generated 39875 with jump_step = 1
+ * Numbers generated 39876 with jump_step = 2
+ * Numbers generated 39877 with jump_step = 3
+ * Numbers generated 39884 with jump_step = 10
+ * Numbers generated 39800 with jump_step = 550 (why?)
+ * Numbers generated 40000 with jump_step = 750
+ * Numbers generated 40250 with jump_step = 1000
+ * Numbers generated 40750 with jump_step = 1500
+ * Numbers generated 40850 with jump_step = 1600
+ * Numbers generated 65878750 with jump_step = 1750 (why?)
+ * 
+ * Relation: jump_size_in_numbers = 39874 + jump_step    or not?
+ * Change the initialisation does not change those numbers generated.
  */
