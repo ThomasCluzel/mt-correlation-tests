@@ -534,6 +534,53 @@ void gen_next(State *ss)
 
 
 /**
+ * D. Hill functions
+ */
+
+/* ----------------------------------------------------------- */
+/* saveStatus         Saves the MT status in a text File       */
+/*                                                             */
+/* Input: inFileName  The file name                    D. Hill */
+/* ----------------------------------------------------------- */
+
+void saveStatus(const char * inFileName)
+{
+    FILE * fp  = fopen(inFileName, "w");
+    int    i   = 0;
+
+    fprintf(fp, "%d\n", mti);
+
+    for(i = 0 ; i < N ; i++)
+    {
+       fprintf(fp, "%ld\n", mt[i]);
+    }
+
+    fclose(fp);
+}
+
+/* ----------------------------------------------------------- */
+/* restoreStatus     Restores the MT status from a text File   */
+/*                                                             */
+/* Input: inFileName  The file name                    D. Hill */
+/* ----------------------------------------------------------- */
+
+void restoreStatus(const char * inFileName)
+{
+    FILE * fp  = fopen(inFileName, "r");
+    int    i   = 0;
+
+    fscanf(fp, "%d", &mti);
+
+    for(i = 0 ; i < N ; i ++)
+    {
+       fscanf(fp, "%ld", &mt[i]);
+    }
+
+    fclose(fp);
+}
+
+
+/**
  * Our functions
  */
 void getState(State* s)
@@ -546,7 +593,8 @@ void setState(State* s)
   memcpy(mt, s->s, N*sizeof(unsigned long));
   mti = s->ptr;
 }
-void jump_ahead(long jump_step)
+
+void jump_ahead(long jump_step, int methode)
 {
   // for the minipoly
   int i, a=0;
@@ -598,7 +646,10 @@ void jump_ahead(long jump_step)
   if (compare_state(ss1, ss2) != 0)
     printf("error the states are different\n");
 
-  setState(ss2);
+  if(methode == 1)
+    setState(ss1); // horner
+  else
+    setState(ss2); // sliding window
 
   free(ss1);
   free(ss2);
@@ -608,30 +659,64 @@ void jump_ahead(long jump_step)
 }
 
 // just a quick test, move it to the test folder
-int main_test()
+int main()
 {
-  long i, jump_step = 10; /* the number of steps of jumping ahead */
+  long i, jump_step = 50000; /* the number of steps of jumping ahead */
   unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
   State si; // the initial state
-  unsigned long output[10], o, nbGen=10;
+  const long nbGen=3;
+  unsigned long output[nbGen], o;
 
   init_by_array(init, length);
+/*
+  saveStatus("initial_status.txt");
+  getState(&si);
+  //getState(&si); // save the initial state
+  printf("\nmti=%d\n", mti);
+*/
+  for(i=0 ; i< 1000000000L ; i++) // skip x numbers
+    genrand_int32();
+/*
+  saveStatus("desired_final1_status.txt");
 
-  getState(&si); // save the initial state
-  printf("mti=%d\n", mti);
+  //restoreStatus("initial_status.txt");
+  setState(&si); // save the initial state
+  printf("\nmti=%d\n", mti);
 
   for(i=0 ; i<jump_step ; i++) // skip x numbers
     genrand_int32();
-  printf("mti=%d\n", mti);
+  
+  saveStatus("desired_final2_status.txt");
 
+  printf("mti=%d\n", mti);
   for(i=0 ; i<nbGen ; i++)
-    output[i] = genrand_int32();
+    //output[i] = genrand_int32();
+    printf("%lu\n", genrand_int32());
 
-  setState(&si); // reset the state
-  printf("mti=%d\n", mti);
+  //setState(&si); // reset the state
+  restoreStatus("initial_status.txt");
+  printf("\nmti=%d\n", mti);
 
-  jump_ahead(jump_step); //jump x steps
+  jump_ahead(jump_step, 2); //jump x steps
+
+  saveStatus("final_status_with_sliding_window.txt");
+
   printf("mti=%d\n", mti);
+  for(i=0 ; i<nbGen ; i++)
+    printf("%lu\n", genrand_int32());
+
+  //setState(&si);
+  restoreStatus("initial_status.txt");
+
+  printf("\nmti=%d\n", mti);
+
+  jump_ahead(jump_step, 1); //jump x steps
+
+  saveStatus("final_status_with_horner.txt");
+
+  printf("mti=%d\n", mti);
+  for(i=0 ; i<nbGen ; i++)
+    printf("%lu\n", genrand_int32());
 
   for(i=0 ; i<nbGen ; i++)
   {
@@ -640,24 +725,26 @@ int main_test()
       printf("Error: expected %lu, got %lu\n", output[i], o);
   }
   printf("End \n");
+*/
 
   return 0;
 }
 
 // to determinate how step we actually skip
-int main()
+int main_test()
+
 {
   unsigned long init[4]={0x123, 0x234, 0x345, 0x456}, length=4;
   State si; // the initial state
   unsigned long output[10], nbGen=10;
-  long i, jump_step = 550, numbersGen=0; /* the number of steps of jumping ahead */
+  long i, jump_step = 50000, numbersGen=0; /* the number of steps of jumping ahead */
 
   init_by_array(init, length);
 
   getState(&si); // save the initial state
 
   // jump ahead
-  jump_ahead(jump_step);
+  jump_ahead(jump_step, 2);
 
   for(i=0 ; i<nbGen ; i++)
     output[i] = genrand_int32();
