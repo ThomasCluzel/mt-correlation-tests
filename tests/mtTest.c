@@ -78,10 +78,10 @@ int main(void)
    {
       //printf("%10lu ", genrand_int32());
       random_integer = genrand_int32();
-      fscanf(file_correct_output, "%ul", &random_integer_correct);
+      fscanf(file_correct_output, "%lu", &random_integer_correct);
       if( random_integer != random_integer_correct )
       {
-         fprintf(stderr, "Error: generated %ul expected %ul\n", random_integer, random_integer_correct);
+         fprintf(stderr, "Error: generated %lu expected %lu\n", random_integer, random_integer_correct);
          fclose(file_correct_output);
          return 1; // test failed
       }
