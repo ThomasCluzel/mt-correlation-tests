@@ -13,7 +13,7 @@ RUN cmake -G "Unix Makefiles" && \
     ctest && \
     cd ../
 
-# start the TestU01 tests when the container is run
+# start the statistical tests when the container is run
 CMD [ "./prog" ]
 
 

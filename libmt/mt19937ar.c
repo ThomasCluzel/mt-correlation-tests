@@ -173,3 +173,48 @@ double genrand_res53(void)
     return(a*67108864.0+b)*(1.0/9007199254740992.0); 
 } 
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
+
+/***************************************************************/
+/*           Function to save and restore the status           */
+
+/* ----------------------------------------------------------- */
+/* saveStatus         Saves the MT status in a text File       */
+/*                                                             */
+/* Input: inFileName  The file name                    D. Hill */
+/* ----------------------------------------------------------- */
+
+void saveStatus(const char * inFileName)
+{
+    FILE * fp  = fopen(inFileName, "w");
+    int    i   = 0;
+
+    fprintf(fp, "%d\n", mti);
+
+    for(i = 0 ; i < N ; i++)
+    {
+       fprintf(fp, "%ld\n", mt[i]);
+    }
+
+    fclose(fp);
+}
+
+/* ----------------------------------------------------------- */
+/* restoreStatus     Restores the MT status from a text File   */
+/*                                                             */
+/* Input: inFileName  The file name                    D. Hill */
+/* ----------------------------------------------------------- */
+
+void restoreStatus(const char * inFileName)
+{
+    FILE * fp  = fopen(inFileName, "r");
+    int    i   = 0;
+
+    fscanf(fp, "%d", &mti);
+
+    for(i = 0 ; i < N ; i ++)
+    {
+       fscanf(fp, "%ld", &mt[i]);
+    }
+
+    fclose(fp);
+}

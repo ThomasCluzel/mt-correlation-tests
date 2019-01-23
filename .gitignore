@@ -3,6 +3,7 @@ CMake*
 CTest*
 Testing*
 Makefile
+*.cmake
 !CMakeLists.txt
 
 # ignore config files
@@ -13,9 +14,11 @@ Makefile
 libmt/*.a
 libmt/*.lib
 prog*
+tests/test_mt*
 
 # ignore log files
 *.log
 
 # ignore scripts
 *.bat
+*.sh
