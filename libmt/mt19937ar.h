@@ -74,4 +74,11 @@ double genrand_real3(void);
 /* generates a random number on [0,1) with 53-bit resolution*/
 double genrand_res53(void);
 
+
+/* Functions to save and restore the status of Mersenne Twister by D. Hill */
+void saveStatus(const char * inFileName);
+void restoreStatus(const char * inFileName);
+/* where inFileName is the name of a file that      */
+/* will be/must contain the status of the generator */
+
 #endif // MT19937_H
