@@ -13,6 +13,8 @@ Makefile
 *.exe
 libmt/*.a
 libmt/*.lib
+libmultivartest/*.a
+libmultivartest/*.lib
 prog*
 tests/test_mt*
 
