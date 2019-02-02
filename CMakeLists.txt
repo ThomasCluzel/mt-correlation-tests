@@ -31,7 +31,7 @@ add_subdirectory(libmultivartest)
 add_subdirectory(tests)
 
 # Source files
-file(GLOB SRC *.c)
+file(GLOB SRC *.cpp)
 
 # Compile the executable => prog
 add_executable(prog ${SRC})
