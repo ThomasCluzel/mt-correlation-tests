@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(libmt19937ar)
+project(libmt19937ar LANGUAGES C)
 
 # Variables containing the sources files
 file(GLOB SRC *.c)
