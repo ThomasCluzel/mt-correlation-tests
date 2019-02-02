@@ -18,6 +18,7 @@ Pseudorandom Number Streams Incorporating the Data’s Multivariate Nature_").
 
 This repository contains:
 - a libmt folder: it contains the Mersenne Twister PRNG as a library
+- a libmultivartest folder: it contains C. Ismay's correlation tests
 - a tests folder: it contains unit tests that validate the implementation of Mersenne Twister
 - a mersenne_twister_states folder: it contains status of the PRNG separated by 1000 billion numbers.
 - files that use the tests to test the existence of correlations in sequences of Mersenne Twister
@@ -27,7 +28,7 @@ This repository contains:
 This project uses CMake to offer the largest possible compatibility.
 1. To install CMake have a look at this page
 [https://cmake.org/download/](https://cmake.org/download/)
-1. Set current directory to the root of this project
+1. Set current directory to the root of this project(`cd path/to/folder/`)
 1. Then run `cmake -G "Unix Makefiles"` to use linux make or
 `cmake -G "MinGW Makefiles"` to use MinGW make (if you want to use an
 IDE look for its generator in the list of generators)
@@ -37,12 +38,12 @@ IDE look for its generator in the list of generators)
 
 ### How to run the unit tests
 
-After having compiled the project, go to the "tests" folder and run
-the command `ctest -V`.
+After having compiled the project, go in the "tests" folder
+(`cd tests`) and run the command `ctest -V`.
 
 Take note that you may want to disable the unit test that
 check the gap between two status because it is very long.
-However you should not trust us and run the test to very that
+However you should not trust us and run the test to verify that
 the status are separated by enough numbers.
 
 ### How to run the statistical tests
@@ -56,8 +57,10 @@ However, if you don't know anything about docker or virtualisation, you
 may want to compile the project yourself rather than using docker.
 
 To compile and run the code with docker:
-- Compile the code (and run unit tests) by building the image: `docker build -t mt-project .`
-- Run the statistical tests by running a container: `docker run --rm mt-project`
+- Compile the code (and run unit tests) by building the image:
+`docker build -t mt-correlation-tests .`
+- Run the statistical tests by running a container:
+`docker run --rm mt-correlation-tests`
 
 :warning: It is mandatory to have an internet connection the first time you
 build the container because it needs to download the base image namely
