@@ -187,6 +187,11 @@ void saveStatus(const char * inFileName)
 {
     FILE * fp  = fopen(inFileName, "w");
     int    i   = 0;
+    if(fp == NULL) // addition to the original function
+    {
+        fprintf(stderr, "Error: file %s could not be open\n", inFileName);
+        exit(1);
+    }
 
     fprintf(fp, "%d\n", mti);
 
@@ -208,6 +213,11 @@ void restoreStatus(const char * inFileName)
 {
     FILE * fp  = fopen(inFileName, "r");
     int    i   = 0;
+    if(fp == NULL) // addition to the original function
+    {
+        fprintf(stderr, "Error: file %s could not be open\n", inFileName);
+        exit(1);
+    }
 
     fscanf(fp, "%d", &mti);
 
