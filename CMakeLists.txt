@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.0)
 
 set(DEBUG YES)
 
-# Le projet est étiqueté hello
+# The name of the project
 project("mt-correlation-tests"
         VERSION 0.1
-        LANGUAGES C)
+        LANGUAGES C CXX)
 
 # add warning flags to the compiler
 if(MSVC)
@@ -23,8 +23,9 @@ if(${DEBUG})
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 endif()
 
-# Include the library
+# Include the libraries directories
 add_subdirectory(libmt)
+add_subdirectory(libmultivartest)
 
 # Add the tests
 add_subdirectory(tests)
@@ -37,3 +38,4 @@ add_executable(prog ${SRC})
 
 # Linking of the MT library
 target_link_libraries(prog mt19937ar)
+target_link_libraries(prog multivartest)
