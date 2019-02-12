@@ -6,7 +6,6 @@
 #include "libmultivartest/mcorr.h"
 #include "libmultivartest/mmult.h"
 #include "libmultivartest/mport.h"
-#include "libmultivartest/prob/prob.cpp" // weird but it is in Ismay's thesis
 
 // Include Mersenne Twister
 extern "C" {
