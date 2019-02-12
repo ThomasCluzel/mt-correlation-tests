@@ -12,16 +12,15 @@ extern "C" {
 #include "experiment.hpp"
 
 // const flags
-const int FLAG_TEST_CORR = 0b001; // !< Enable the mcorr tests
-const int FLAG_TEST_MULT = 0b010; // !< Enable the mmult tests
-const int FLAG_TEST_PORT = 0b100; // !< Enable the mport tests
-const int FLAG_TEST_ALL  = 0b111; // !< Enable the all the tests
+const int FLAG_TEST_CORR = 0b001;
+const int FLAG_TEST_MULT = 0b010;
+const int FLAG_TEST_PORT = 0b100;
+const int FLAG_TEST_ALL  = 0b111;
 
-// Constant
+// Constants
 const int NP = 32768;
 
-/* A function to perform the statistical */
-/* tests on a bunch of initial status    */
+// Functions
 void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus, int flagTestEnable, double Alpha)
 {
     const int n = NP/numberOfStatus, p = numberOfStatus;
