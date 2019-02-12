@@ -32,9 +32,10 @@ add_subdirectory(tests)
 
 # Source files
 file(GLOB SRC *.cpp)
+file(GLOB HEADER *.hpp)
 
 # Compile the executable => prog
-add_executable(prog ${SRC})
+add_executable(prog ${SRC} ${HEADER})
 
 # Linking of the MT library
 target_link_libraries(prog mt19937ar)
