@@ -7,7 +7,7 @@ using namespace std;
 
 void runExperiments(const char* filesWithStatus[MAX_NUMBER_OF_STATUS], int flagTestsEnable, double alpha)
 {
-    for(int numberOfStatus=2; numberOfStatus!=MAX_NUMBER_OF_STATUS; numberOfStatus*=2) // for each (n, p) possible
+    for(int numberOfStatus=2; numberOfStatus<=MAX_NUMBER_OF_STATUS; numberOfStatus*=2) // for each (n, p) possible
     {
         cout << "\n\nExperiments with " << numberOfStatus << " status\n\n";
         runCorrelationTests(filesWithStatus, numberOfStatus, flagTestsEnable, alpha); // run tests
