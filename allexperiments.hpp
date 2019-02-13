@@ -14,7 +14,7 @@
  * \brief launch the tests for all (n, p) possible
  * \param filesWithStatus array of names of files containing a status of Mersenne Twister
  * \param flagTestsEnable flag to select tests to run
- * \param alpha authorised margin of error of the tests
+ * \param alpha the first order error of the tests
  */
 void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TEST_ALL, double alpha = 1.0e-4);
 

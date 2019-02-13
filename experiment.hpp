@@ -18,7 +18,7 @@ extern const int FLAG_TEST_ALL;  // !< Enable the all the tests
  *        containing them
  * \param numberOfStatus size of the array of status
  * \param flagTestEnable flags to choose which test to enable
- * \param Alpha the maximum error authorised (results are given \f$ \pm Alpha \f$)
+ * \param Alpha the first-order error
  */
 void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus,
     int flagTestEnable = FLAG_TEST_ALL, double Alpha = 1.0e-4);
