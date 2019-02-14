@@ -28,12 +28,12 @@ void runControlExperiments()
     runExperiments(statusFiles, FLAG_TEST_CORR | FLAG_TEST_MULT);
 }
 
-void runExperimentsStatusSeparatedByOneTrillionNumbers()
+void runAllExperiments(int step)
 {
     // each status are separated by one trillion number
     const char* baseName = "mersenne_twister_states/mts000M000";
     char* statusFiles[MAX_NUMBER_OF_STATUS]; // array of pointers, not array of arrays
-    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i+=step)
     {
         statusFiles[i] = (char*)malloc(38 * sizeof(char));
         sprintf(statusFiles[i], "%s%03d", baseName, i);
@@ -45,6 +45,6 @@ void runExperimentsStatusSeparatedByOneTrillionNumbers()
     runExperiments((const char**)statusFiles);
 
     // free memory
-    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i+=step)
         free(statusFiles[i]);
 }

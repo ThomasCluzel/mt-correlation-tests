@@ -25,10 +25,11 @@ void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TE
 void runControlExperiments();
 
 /**
- * \fn void runExperimentsStatusSeparatedByOneTrillionNumbers();
+ * \fn void runAllExperiments();
  * \brief run all the experiments on each (n, p) possible for the 128 first
  *        status in the mersenne_twister_states folder
+ * \param step the number of random number divided by one trillion between each status
  */
-void runExperimentsStatusSeparatedByOneTrillionNumbers();
+void runAllExperiments(int step = 1);
 
 #endif // ALLEXPERIMENTS_HPP

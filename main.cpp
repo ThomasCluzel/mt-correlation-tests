@@ -4,10 +4,9 @@
 int main(int, char**)
 {
     runControlExperiments();
-    runExperimentsStatusSeparatedByOneTrillionNumbers();
+    runAllExperiments();
+    runAllExperiments(2); // influence of distance between status
     // TODO: run other experiments
-    // - the second half (128 to 255)
-    // - separate by 2 trillions (0 to 256)
     // - change the lag order to p/2
     return 0;
 }
