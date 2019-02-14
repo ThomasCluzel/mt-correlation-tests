@@ -16,7 +16,10 @@ int main(int, char**)
     // test the influence of distance between status
     cout << "\nBeginning of the experiments with status separated by two trillion numbers\n";
     runAllExperiments(2);
-    // TODO: run other experiments
-    // - change the lag order to p/2
+
+    // test the influence of the lag order
+    cout << "\nBeginning of the experiments with a lag order of p/2\n";
+    runExperimentsOnLagOrder();
+    
     return 0;
 }
