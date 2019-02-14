@@ -18,9 +18,10 @@ extern const int FLAG_TEST_ALL;  // !< Enable the all the tests
  *        containing them
  * \param numberOfStatus size of the array of status
  * \param flagTestEnable flags to choose which test to enable
- * \param Alpha the first-order error
+ * \param lagOrder the lag order for portmanteau tests if -1 then lagOrder=numberOfStatus
+ * \param alpha the first-order error
  */
 void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus,
-    int flagTestEnable = FLAG_TEST_ALL, double Alpha = 1.0e-4);
+    int flagTestEnable = FLAG_TEST_ALL, int lagOrder=-1, double alpha = 1.0e-4);
 
 #endif // EXPERIMENT_HPP

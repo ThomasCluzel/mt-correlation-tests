@@ -21,7 +21,8 @@ const int FLAG_TEST_ALL  = 0b111;
 const int NP = 32768;
 
 // Functions
-void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus, int flagTestEnable, double Alpha)
+void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus,
+                         int flagTestEnable, int lagOrder, double alpha)
 {
     const int n = NP/numberOfStatus, p = numberOfStatus;
     TNT::Array2D <long double> mat(n, p);
@@ -45,7 +46,7 @@ void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus
 
     if(flagTestEnable & FLAG_TEST_CORR)
     {
-        mcorr mcorr1 = mcorr(n, p, mat, Alpha);
+        mcorr mcorr1 = mcorr(n, p, mat, alpha);
 
         //Pearson
         mcorr1.mcorr_pairCorr(0);
@@ -58,16 +59,18 @@ void runCorrelationTests(const char* filesWithStatus[], const int numberOfStatus
     if(flagTestEnable & FLAG_TEST_MULT)
     {
         //Testing if correlation matrix = identity
-        mmult mmult1 = mmult(n, p, mat, Alpha);
+        mmult mmult1 = mmult(n, p, mat, alpha);
         mmult1.mmult_LRT();
     }
     
     if(flagTestEnable & FLAG_TEST_PORT)
     {
-        //Portmanteau tests for white noise with lag = p
-        mport mport1 = mport(n, p, mat, Alpha);
+        //Portmanteau tests for white noise
+        if(lagOrder <= 0 || lagOrder > p)
+            lagOrder = p; // default value of lagOrder is p
+        mport mport1 = mport(n, p, mat, alpha);
         mport1.mport_centerMat();
-        mport1.mport_portmanteauTests(p);
-        mport1.mport_mahdiMcLeod(p);
+        mport1.mport_portmanteauTests(lagOrder);
+        mport1.mport_mahdiMcLeod(lagOrder);
     }
 }
