@@ -10,13 +10,12 @@
 #include "experiment.hpp"
 
 /**
- * \fn void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TEST_ALL, double alpha = 1.0e-4);
+ * \fn void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TEST_ALL);
  * \brief launch the tests for all (n, p) possible
  * \param filesWithStatus array of names of files containing a status of Mersenne Twister
  * \param flagTestsEnable flag to select tests to run
- * \param alpha the first order error of the tests
  */
-void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TEST_ALL, double alpha = 1.0e-4);
+void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TEST_ALL);
 
 /**
  * \fn void runControlExperiments();
@@ -25,11 +24,18 @@ void runExperiments(const char* filesWithStatus[], int flagTestsEnable = FLAG_TE
 void runControlExperiments();
 
 /**
- * \fn void runAllExperiments();
+ * \fn void runAllExperiments(int step = 1);
  * \brief run all the experiments on each (n, p) possible for the 128 first
  *        status in the mersenne_twister_states folder
  * \param step the number of random number divided by one trillion between each status
  */
 void runAllExperiments(int step = 1);
+
+/**
+ * \fn void runExperimentsOnLagOrder();
+ * \brief run the same tests as runAllExperiments but with a lag order
+ *        of numberOfStatus/2
+ */
+void runExperimentsOnLagOrder();
 
 #endif // ALLEXPERIMENTS_HPP

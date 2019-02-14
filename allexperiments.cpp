@@ -3,14 +3,14 @@
 
 const int MAX_NUMBER_OF_STATUS = 128;
 
-using std::cout;
+using namespace std;
 
-void runExperiments(const char* filesWithStatus[MAX_NUMBER_OF_STATUS], int flagTestsEnable, double alpha)
+void runExperiments(const char* filesWithStatus[MAX_NUMBER_OF_STATUS], int flagTestsEnable)
 {
     for(int numberOfStatus=2; numberOfStatus<=MAX_NUMBER_OF_STATUS; numberOfStatus*=2) // for each (n, p) possible
     {
         cout << "\n\n\nExperiments with " << numberOfStatus << " status\n\n";
-        runCorrelationTests(filesWithStatus, numberOfStatus, flagTestsEnable, alpha); // run tests
+        runCorrelationTests(filesWithStatus, numberOfStatus, flagTestsEnable); // run tests
     }
 }
 
@@ -28,19 +28,52 @@ void runControlExperiments()
 
 void runAllExperiments(int step)
 {
-    // each status are separated by one trillion number
+    // initialize the status
     const char* baseName = "mersenne_twister_states/mts000M000";
     char* statusFiles[MAX_NUMBER_OF_STATUS]; // array of pointers, not array of arrays
-    for(int i=0; i<MAX_NUMBER_OF_STATUS; i+=step)
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
     {
         statusFiles[i] = (char*)malloc(38 * sizeof(char));
-        sprintf(statusFiles[i], "%s%03d", baseName, i);
+        if(statusFiles[i] == NULL)
+        {
+            cerr << "malloc error" << endl;
+            exit(1);
+        }
+        sprintf(statusFiles[i], "%s%03d", baseName, i*step);
     }
 
     // run the all the experiments
     runExperiments((const char**)statusFiles);
 
     // free memory
-    for(int i=0; i<MAX_NUMBER_OF_STATUS; i+=step)
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
+        free(statusFiles[i]);
+}
+
+void runExperimentsOnLagOrder()
+{
+    // initialize the status
+    const char* baseName = "mersenne_twister_states/mts000M000";
+    char* statusFiles[MAX_NUMBER_OF_STATUS]; // array of pointers, not array of arrays
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
+    {
+        statusFiles[i] = (char*)malloc(38 * sizeof(char));
+        if(statusFiles[i] == NULL)
+        {
+            cerr << "malloc error" << endl;
+            exit(1);
+        }
+        sprintf(statusFiles[i], "%s%03d", baseName, i);
+    }
+
+    // run the experiments with lag order = numberOfStatus / 2
+    for(int numberOfStatus=2; numberOfStatus<=MAX_NUMBER_OF_STATUS; numberOfStatus*=2) // for each (n, p) possible
+    {
+        cout << "\n\n\nExperiments with " << numberOfStatus << " status\n\n";
+        runCorrelationTests((const char**)statusFiles, numberOfStatus, FLAG_TEST_ALL, numberOfStatus/2); // run tests
+    }
+
+    // free memory
+    for(int i=0; i<MAX_NUMBER_OF_STATUS; i++)
         free(statusFiles[i]);
 }
