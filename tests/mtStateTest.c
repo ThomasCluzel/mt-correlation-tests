@@ -13,20 +13,21 @@
 #define TMP_FILENAME "tmp"
 
 /* compares the states stored in 2 files and returns a boolean */
-int areStateFileEqual(char* fileA, char* fileB);
+int areStateFileEqual(const char* fileA, const char* fileB);
 
 int main(int argc, char const *argv[])
 {
-    char* filenames[] = { "../mersenne_twister_states/mts000M000000", // first test
-                          "../mersenne_twister_states/mts000M000001",
-                          "../mersenne_twister_states/mts000M000202", // second test
-                          "../mersenne_twister_states/mts000M000203" };
+    const char* filenames[] = { "../mersenne_twister_states/mts000M000000", // first test
+                                "../mersenne_twister_states/mts000M000001",
+                                "../mersenne_twister_states/mts000M000202", // second test
+                                "../mersenne_twister_states/mts000M000203" };
+    const int numberOfFilename = sizeof(filenames) / sizeof(filenames[0]);
     int i;
     unsigned long j;
 
     // no initialisation because with restore an existing status
 
-    for(i = 0; i < 4; i+=2)
+    for(i = 0; i < numberOfFilename; i+=2)
     {
         restoreStatus(filenames[i]);
 
@@ -46,7 +47,7 @@ int main(int argc, char const *argv[])
     return 0; // test succeed
 }
 
-int areStateFileEqual(char* fileA, char* fileB)
+int areStateFileEqual(const char* fileA, const char* fileB)
 {
     int mtiA, mtiB, i;
     unsigned long mtA, mtB;
