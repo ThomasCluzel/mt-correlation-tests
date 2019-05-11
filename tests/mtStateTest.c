@@ -6,7 +6,7 @@
  */
 
 #include <stdio.h>
-#include "../libmt/mt19937ar.h"
+#include <mt19937ar.h>
 #define N 624
 
 #define GAP 1000000000000 // amount of random number between 2 states
@@ -15,7 +15,7 @@
 /* compares the states stored in 2 files and returns a boolean */
 int areStateFileEqual(const char* fileA, const char* fileB);
 
-int main(int argc, char const *argv[])
+int main()
 {
     const char* filenames[] = { "../mersenne_twister_states/mts000M000000", // first test
                                 "../mersenne_twister_states/mts000M000001",
@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
                                 "../mersenne_twister_states/mts000M000203" };
     const int numberOfFilename = sizeof(filenames) / sizeof(filenames[0]);
     int i;
-    unsigned long j;
+    unsigned long long j;
 
     // no initialisation because with restore an existing status
 

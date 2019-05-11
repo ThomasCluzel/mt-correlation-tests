@@ -11,10 +11,10 @@ Makefile
 
 # ignore binaries
 *.exe
-libmt/*.a
-libmt/*.lib
-libmultivartest/*.a
-libmultivartest/*.lib
+externals/libmt/*.a
+externals/libmt/*.lib
+externals/libmultivartest/*.a
+externals/libmultivartest/*.lib
 prog*
 tests/test_mt*
 

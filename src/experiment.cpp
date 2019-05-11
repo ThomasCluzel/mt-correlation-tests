@@ -1,12 +1,12 @@
 // C. Ismay's includes
-#include "libmultivartest/tntjama/tnt.h"
-#include "libmultivartest/mcorr.h"
-#include "libmultivartest/mmult.h"
-#include "libmultivartest/mport.h"
+#include <tntjama/tnt.h>
+#include <mcorr.h>
+#include <mmult.h>
+#include <mport.h>
 
 // Include Mersenne Twister
 extern "C" {
-#include "libmt/mt19937ar.h"
+#include <mt19937ar.h>
 }
 
 #include "experiment.hpp"

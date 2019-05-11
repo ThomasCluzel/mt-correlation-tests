@@ -45,7 +45,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "../libmt/mt19937ar.h"
+#include <mt19937ar.h>
 
 #define FILENAME_CORRECT_OUTPUT "mt19937ar.out"
 #define BUF_SIZE 512
