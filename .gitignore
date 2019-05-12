@@ -10,6 +10,7 @@ Makefile
 .vscode
 
 # ignore binaries
+build/
 *.exe
 externals/libmt/*.a
 externals/libmt/*.lib

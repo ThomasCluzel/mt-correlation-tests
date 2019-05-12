@@ -16,13 +16,6 @@ endif()
 add_subdirectory(externals/libmt)
 add_subdirectory(externals/libmultivartest)
 
-# Add warnings
-if(MSVC)
-  add_compile_options(/W4)
-else()
-  add_compile_options(-Wall -Wextra)
-endif()
-
 # Add the unit tests
 add_subdirectory(tests)
 
@@ -32,5 +25,9 @@ add_executable(prog src/main.cpp
                     src/experiment.cpp src/experiment.hpp)
 
 # Linking of MT and Ismay's tests
-target_link_libraries(prog PRIVATE mt19937ar)
-target_link_libraries(prog PRIVATE multivartest)
+target_link_libraries(prog PRIVATE mt19937ar multivartest)
+
+# Add warnings
+if(NOT MSVC)
+    target_compile_options(prog PRIVATE -Wall -Wextra)
+endif()

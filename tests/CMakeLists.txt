@@ -7,10 +7,16 @@ project(tests
 
 # The test programs and library link
 add_executable(test_mt mtTest.c)
-target_link_libraries(test_mt PRIVATE m)
 target_link_libraries(test_mt PRIVATE mt19937ar)
+if(NOT MSVC)
+    target_link_libraries(test_mt PRIVATE m)
+    target_compile_options(test_mt PRIVATE -Wall -Wextra)
+endif()
 add_executable(test_mt_status mtStateTest.c)
 target_link_libraries(test_mt_status PRIVATE mt19937ar)
+if(NOT MSVC)
+    target_compile_options(test_mt_status PRIVATE -Wall -Wextra)
+endif()
 
 # CTest
 enable_testing()
