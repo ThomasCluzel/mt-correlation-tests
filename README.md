@@ -17,10 +17,11 @@ Pseudorandom Number Streams Incorporating the Data’s Multivariate Nature_").
 ## Description of the repository
 
 This repository contains:
-- a libmt folder: it contains the Mersenne Twister PRNG as a library
-- a libmultivartest folder: it contains C. Ismay's correlation tests
-- a tests folder: it contains unit tests that validate the implementation of Mersenne Twister
+- an external folder containing:
+    - a libmt folder: it contains the Mersenne Twister PRNG as a library
+    - a libmultivartest folder: it contains C. Ismay's correlation tests
 - a mersenne_twister_states folder: it contains status of the PRNG separated by 1000 billion numbers.
+- a tests folder: it contains unit tests that validate the implementation of Mersenne Twister
 - files that use the tests to test the existence of correlations in sequences of Mersenne Twister
 
 ### How to compile
@@ -35,6 +36,9 @@ IDE look for its generator in the list of generators)
 1. Compile the project either with the tool you are used to or by running
 `cmake --build .`
 1. Finally you can run the binary
+
+If you are familiar with CMake, it is advised to do an
+_out-of-source build_.
 
 ### How to run the unit tests
 
