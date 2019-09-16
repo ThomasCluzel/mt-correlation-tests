@@ -61,7 +61,7 @@ However, if you don't know anything about docker or virtualisation, you
 may want to compile the project yourself rather than using docker.
 
 To compile and run the code with docker:
-- Compile the code (and run unit tests) by building the image:
+- Compile the code (and run the unit tests) by building the image:
 `docker build -t mt-correlation-tests .`
 - Run the statistical tests by running a container:
 `docker run --rm mt-correlation-tests`
@@ -70,6 +70,21 @@ To compile and run the code with docker:
 build the container because it needs to download the base image namely
 the one containing gcc and cmake.
 
+If you neither want to install cmake nor docker, we also provide
+a singularity definition file (`mt.def`) to build and run the
+tests in an isolated environment.
+
+```sh
+# Create the image
+sudo singularity build mt.sif mt.def
+
+# Build
+singularity exec mt.sif cmake -G "Unix Makefiles"
+singularity exec mt.sif cmake --build .
+
+# Run the statistical tests
+singularity exec mt.sif ./prog
+```
 -------------------------------------------------------------------------
 
-Bruno JOUSSE & Thomas CLUZEL
+Bruno Jousse & Thomas Cluzel

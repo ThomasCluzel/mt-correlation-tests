@@ -18,6 +18,7 @@ externals/libmultivartest/*.a
 externals/libmultivartest/*.lib
 prog*
 tests/test_mt*
+*.sif
 
 # ignore log files
 *.log

@@ -1,0 +1,26 @@
+BootStrap: library
+From: ubuntu:18.04
+
+%post
+    # install dependencies
+    apt-get -y update
+    apt-get -y install gcc g++ cmake
+
+%labels
+    Author Thomas Cluzel
+    AuthorMail thomas.cluzel@etu.uca.fr
+    LastUpdate Mon Sep 16 2019
+
+%help
+    This singularity image aims at providing an
+    isolated environment to build and run the tests.
+
+        # Create the image
+        sudo singularity build mt.sif mt.def
+        
+        # Build
+        singularity exec mt.sif cmake -G "Unix Makefiles"
+        singularity exec mt.sif cmake --build .
+        
+        # Run the statistical tests
+        singularity exec mt.sif ./prog
